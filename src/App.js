@@ -1,23 +1,44 @@
-import logo from './logo.svg';
+import { useEffect, useState } from 'react';
 import './App.css';
+import Form from './components/Form';
+import Todos from './components/Todos';
 
 function App() {
+  const [inputTodo, setInputTodo] = useState('')
+  const [todos, setTodos] = useState([])
+  const [filterdTodo, setFilteredTodo] = useState([])
+  const [optionState, setOptionState] = useState('All')
+
+  useEffect(() => {
+    selectHandler()
+  }, [optionState, todos])
+
+  const selectHandler = () => {
+    switch (optionState) {
+      case 'Compeleted':
+        setFilteredTodo(todos.filter(todo => todo.completed === true))
+        break
+      case 'Incompleted':
+        setFilteredTodo(todos.filter(todo => todo.completed === false))
+        break
+      default:
+        setFilteredTodo(todos)
+    }
+  }
+  
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Form
+        inputTodo={inputTodo}
+        setInputTodo={setInputTodo}
+        todos={todos}
+        setTodos={setTodos}
+        filterdTodo={filterdTodo}
+        setFilteredTodo={setFilteredTodo}
+        setOptionState={setOptionState}
+        optionState={optionState}
+      />
+      <Todos todos={filterdTodo} setTodos={setTodos} />
     </div>
   );
 }
